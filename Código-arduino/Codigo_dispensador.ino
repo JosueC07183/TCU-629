@@ -1,48 +1,65 @@
-//CREACIÓN DE LAS CONSTANTES
-const int rele = 2; // rele que acciona la bomba
-int trig = 12; // trig del sensor
-int echo = 11; // echo del sensor
-float distancia; // distancia de accionamiento del sensor
-long duracion; // duración que se mantiene activa el sensor
-int pot; // variable para definir el potenciometro de 0 a 1023
-int cantidad; // variable para relacionar el potenciometro a la cantidad de alcohol
+/**
+ * @file Codigo dispensador. 
+ *
+ * @brief Este el código oficial que se usa para el dispensador alcohol.
+ */
 
+// CREACIÓN DE LAS CONSTANTES
+const int rele = 2;        ///< Número del pin para el relé que acciona la bomba
+int trig = 12;             ///< Número del pin para el pin de disparo (trig) del sensor ultrasónico
+int echo = 11;             ///< Número del pin para el pin de eco (echo) del sensor ultrasónico
+float distancia;           ///< Distancia de activación del sensor ultrasónico
+long duracion;             ///< Duración en la que se mantiene activo el sensor ultrasónico
+int pot;                   ///< Variable para leer el valor del potenciómetro (0 a 1023)
+int cantidad;              ///< Variable para relacionar el valor del potenciómetro con la cantidad de alcohol
+int led_rojo = 5;          ///< Número del pin para el LED rojo
+int led_verde = 6;         ///< Número del pin para el LED verde
+const int buzzer = 9;      ///< Número del pin para el zumbador
 
 void setup() {
-  Serial.begin(9600);    //iniciar puerto serie
-  pinMode(rele , OUTPUT);  //definir pin como salida
-  pinMode(trig, OUTPUT); // trig salida
-  pinMode(echo, INPUT); // echo entrada
+  Serial.begin(9600);             // Iniciar el puerto serie
+  pinMode(rele, OUTPUT);          // Configurar el pin como salida para el relé
+  pinMode(trig, OUTPUT);          // Configurar el pin de disparo (trig) como salida
+  pinMode(echo, INPUT);           // Configurar el pin de eco (echo) como entrada
+  pinMode(led_rojo, OUTPUT);      // Configurar el pin del LED rojo como salida
+  pinMode(led_verde, OUTPUT);     // Configurar el pin del LED verde como salida
+  pinMode(buzzer, OUTPUT);        // Configurar el pin del zumbador como salida
 }
- 
-void loop(){
 
-  //Código para el potenciómetro
-    pot = analogRead(A0); // lectura del potenciometro (va de 0 a 1023)
-    cantidad = pot/10.23; // relación del potenciometro a la cantidad que se quiere (de 0  100)
-    Serial.print("Cantidad es de = "); // se imprime el dialogo de cantidad
-    Serial.println(cantidad); // se imprime la cantidad (duracion de la bomba en milisegundos)
+void loop() {
+  // Código para leer el potenciómetro
+  pot = analogRead(A0);            // Leer el valor del potenciómetro (va de 0 a 1023)
+  cantidad = pot / 10.23;          // Relacionar el valor del potenciómetro con la cantidad de alcohol (de 0 a 100)
+  Serial.print("Cantidad es de = "); // Imprimir mensaje sobre la cantidad de alcohol
+  Serial.println(cantidad);        // Imprimir la cantidad de alcohol (duración de la bomba en milisegundos)
 
-  //Código del sensor
-    digitalWrite(trig, LOW); // se apaga el sensor
-    delayMicroseconds(2); // duración apagado ms
-    digitalWrite(trig, HIGH); // se enciende el sensor
-    delayMicroseconds(10); // duracion encendido en ms
-    digitalWrite(trig, LOW); // se apaga el sensor
-    duracion = pulseIn(echo, HIGH); // guarda el accionar del sensor
-    distancia = duracion/57.8; // transforma el tiempo accionado en distancia 
-    Serial.print(distancia); // se monitorea la distancia de accionado
-    Serial.println("cm"); //// se monitorea la distancia de accionado
+  // Código para el sensor ultrasónico
+  digitalWrite(trig, LOW);        // Apagar el sensor ultrasónico
+  delayMicroseconds(2);            // Esperar durante un breve tiempo
+  digitalWrite(trig, HIGH);       // Encender el sensor ultrasónico
+  delayMicroseconds(10);           // Esperar durante un breve tiempo
+  digitalWrite(trig, LOW);        // Apagar el sensor ultrasónico
+  duracion = pulseIn(echo, HIGH);  // Obtener la duración del eco del sensor ultrasónico
+  distancia = duracion / 57.8;     // Convertir el tiempo en distancia (cm)
+  Serial.print(distancia);         // Monitorear la distancia de activación
+  Serial.println("cm");            // Monitorear la distancia de activación
 
+  digitalWrite(led_rojo, LOW);
+  digitalWrite(led_verde, HIGH);
 
-    //Código para el accionar de la bomba
-    if(distancia <=15 && distancia>7){ // se define el rango de funcionamiento del sensor para la bomba
-    delay(300) ; // demora para que se accion la bomba al activarse el sensor
-    digitalWrite(rele, HIGH); // activar la bomba 
-    delay(cantidad); // duración que debe durar la bomba activa, esto define la cantidad de alcohol 
-    digitalWrite(rele, LOW); // se desactiva la bomba
-    delay(10000); // demora para que vuelva a funcionar la bomba en caso de utilizarse seguido
-  	}
+    // Código para accionar la bomba
+  if (distancia <= 12 && distancia > 7) { // Definir el rango de funcionamiento del sensor para la bomba
+    delay(500);                       // Demora antes de activar la bomba después de que se active el sensor
+    digitalWrite(rele, HIGH);         // Activar la bomba
+    digitalWrite(led_verde, LOW);
+    digitalWrite(led_rojo, HIGH);
+    delay(cantidad);                   // Duración en la que la bomba debe estar activa (define la cantidad de alcohol)
+    digitalWrite(rele, LOW);          // Desactivar la bomba
 
-    delay(100); // este delay es para reducir la cantidad de lecturas seguidas del sensor
+    analogWrite(buzzer, 5000);
+    delay(3000);                       // Demora antes de que la bomba pueda funcionar nuevamente si se utiliza continuamente
+    analogWrite(buzzer, 0);
   }
+
+  //delay(100); // Este delay es para reducir la cantidad de lecturas consecutivas del sensor
+}

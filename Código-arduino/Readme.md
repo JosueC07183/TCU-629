@@ -10,16 +10,22 @@ float distancia;
 long duracion;
 int pot;
 int cantidad;
-
+int led_rojo = 5;
+int led_verde= 6;
+const int buzzer = 9;
 
 void setup() {
   Serial.begin(9600);
   pinMode(rele , OUTPUT);
   pinMode(trig, OUTPUT);
   pinMode(echo, INPUT);
+  pinMode(led_rojo, OUTPUT); 
+  pinMode(led_verde, OUTPUT);
+  pinMode(buzzer, OUTPUT);   
 }
  
 void loop(){
+
     pot = analogRead(A0);
     cantidad = pot/10.23;
     Serial.print("Cantidad es de = ");
@@ -35,16 +41,23 @@ void loop(){
     Serial.print(distancia);
     Serial.println("cm");
 
-
-    if(distancia <=15 && distancia>7){ 
-    delay(300);
+    digitalWrite(led_rojo, LOW);
+    digitalWrite(led_verde, HIGH);
+    
+    //Código para el accionar de la bomba
+    if(distancia <=12 && distancia>7){ 
+    delay(500) ; 
     digitalWrite(rele, HIGH);
+    digitalWrite(led_verde, LOW);
+    digitalWrite(led_rojo, HIGH); 
     delay(cantidad);
     digitalWrite(rele, LOW);
-    delay(10000);
+    
+    analogWrite (buzzer,5000); 
+    delay(3000); 
+    analogWrite (buzzer,0);
   	}
 
-    delay(100);
-  }
-  ```
+    //delay(100); // este delay es para reducir la cantidad de lecturas seguidas del sensor
+  }  ```
 
