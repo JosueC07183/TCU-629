@@ -6,4 +6,4 @@ Como parte de requisito de graduación los estudiantes de la Universidad de Cost
 # Creación del primer prototipo
 - Al cabo de 3 meses de mucho trabajo por sesiones diarias durante el período de verano de 2022-2023, el equipo de trabajo logró construir el primer dispensador, o la prueba de concepto.
 
-![App Screenshot](https://github.com/JosueC07183/TCU-629/tree/main/images)
+![App Screenshot](https://github.com/JosueC07183/TCU-629/blob/main/images/I_prototipo.jpeg)
