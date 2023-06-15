@@ -12,7 +12,7 @@ Como parte de requisito de graduación los estudiantes de la Universidad de Cost
 > El dispensador mostrado en la imagen de arriba fue creado con los materiales disponibles en el laboratorio, que gracias a la creatividad del equipo de trabajo fue posible su construcción.
 
 ---
-# Entrega del primero prototipo
+# Entrega del primer prototipo
 - Una vez se completó el dispensador, se procedió a entregarlo al hogar de ancianos San Pedro Claver el día 20 de abril.
 
 ![App Screenshot](https://github.com/JosueC07183/TCU-629/blob/main/images/entrega_primer_dispensador.jpeg)
